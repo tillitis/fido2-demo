@@ -15,6 +15,14 @@
 #include "ctaphid.h"
 #include "ctap.h"
 #include "memory_layout.h"
+#include "init.h"
+#include "tkey/assert.h"
+#include "tkey/led.h"
+#include "tkey/proto.h"
+#include "tkey/tk1_mem.h"
+#include "timer.h"
+
+static volatile uint32_t *timer		  = (volatile uint32_t *)TK1_MMIO_TIMER_TIMER;
 
 #define SOLO_FLAG_LOCKED                    0x2
 
@@ -30,7 +38,11 @@ void device_disable_up(bool disable)
 
 uint32_t millis(void)
 {
-    return 0;
+    uint32_t timer_val = *timer;
+    if (timer_val == 0) {
+        assert(1 == 2);
+    }
+    return TIMER_MAX - timer_val;
 }
 
 void device_set_status(uint32_t status)
@@ -164,10 +176,10 @@ static void device_migrate(){
 void device_init()
 {
     hw_init();
-    device_migrate();
-    usbhid_init();
-    ctaphid_init();
-    ctap_init();
+    // device_migrate();
+    // usbhid_init();
+    // ctaphid_init();
+    // ctap_init();
 }
 
 int device_is_nfc(void)

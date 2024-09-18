@@ -81,7 +81,7 @@ static int read_frame(struct header *hdr, uint8_t *data)
     return 0;
 }
 
-int main(int argc, char *argv[])
+int main()
 {
     uint8_t hidmsg[64];
 
@@ -115,7 +115,7 @@ int main(int argc, char *argv[])
             TAG_ERR
     );
 
-    //device_init(argc, argv);
+    device_init();
 
     memset(hidmsg,0,sizeof(hidmsg));
 
