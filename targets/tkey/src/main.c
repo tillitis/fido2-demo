@@ -16,6 +16,7 @@
 #include "tkey/tk1_mem.h"
 #include "tkey/led.h"
 #include "tkey/proto.h"
+#include "frame.h"
 
 // clang-format off
 //static volatile uint32_t *cdi           = (volatile uint32_t *) TK1_MMIO_TK1_CDI_FIRST;
@@ -25,43 +26,6 @@ static volatile uint32_t *cpu_mon_last  = (volatile uint32_t *) TK1_MMIO_TK1_CPU
 static volatile uint32_t *app_addr      = (volatile uint32_t *) TK1_MMIO_TK1_APP_ADDR;
 static volatile uint32_t *app_size      = (volatile uint32_t *) TK1_MMIO_TK1_APP_SIZE;
 // clang-format on
-
-// Touch timeout in seconds
-#define MAX_FRAME_SIZE         64
-#define HID_FRAME_SIZE         64
-#define MAX_CDC_FRAME_SIZE     64
-
-#define MODE_CDC        0x01
-#define MODE_CDC_ACK    0x02
-#define MODE_HID        0x04
-#define MODE_HID_ACK    0x08
-
-uint8_t FrameMode   = 0;
-uint8_t FrameLength = 0;
-
-struct header {
-    uint8_t mode;
-    uint8_t len;
-};
-
-// Incoming packet from client
-struct frame {
-    struct header hdr;            // Framing Protocol header
-    uint8_t data[MAX_FRAME_SIZE]; // Application level protocol
-};
-
-
-void appreply_cdc_ack(void)
-{
-    writebyte(MODE_CDC_ACK);
-    writebyte(0);
-}
-
-void appreply_hid_ack(void)
-{
-    writebyte(MODE_HID_ACK);
-    writebyte(0);
-}
 
 static int read_frame(struct header *hdr, uint8_t *data)
 {
