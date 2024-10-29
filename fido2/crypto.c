@@ -385,7 +385,6 @@ void crypto_ed25519_load_key(uint8_t * data, int len)
 
 void crypto_ed25519_sign(uint8_t * data1, int len1, uint8_t * data2, int len2, uint8_t * sig)
 {
-    uint8_t *sig_tmp;
     unsigned long long siglen;
 
     // ed25519 signature APIs need the message at once (by design!) and in one
@@ -415,7 +414,7 @@ void crypto_ed25519_sign(uint8_t * data1, int len1, uint8_t * data2, int len2, u
     // The maximum possible length smlen is mlen+crypto_sign_BYTES.
     // The caller must allocate at least mlen+crypto_sign_BYTES bytes for sm.
 
-    sig_tmp = malloc(crypto_sign_ed25519_BYTES+len);
+    uint8_t sig_tmp[crypto_sign_ed25519_BYTES+len];
     memset(sig_tmp, 0, 64+len);
 
     // TODO: check that correct load_key() had been called?
@@ -423,7 +422,6 @@ void crypto_ed25519_sign(uint8_t * data1, int len1, uint8_t * data2, int len2, u
 
     if (siglen > 64)
     memcpy(sig, sig_tmp, 64);
-    free(sig_tmp);
 }
 
 #endif
