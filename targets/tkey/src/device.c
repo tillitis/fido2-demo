@@ -229,11 +229,14 @@ uint32_t ctap_atomic_count(uint32_t amount)
     static uint32_t sc = 0;
 
     flash_read(flash_addr(COUNTER2_PAGE), (uint8_t*)&erases, sizeof(erases));
+    printf2(TAG_COUNT, "read erases: %lu\r\n", erases);
+
     if (erases == 0xffffffff)
     {
         erases = 1;
         flash_erase_page(COUNTER2_PAGE);
         flash_write(flash_addr(COUNTER2_PAGE), (uint8_t*)&erases, 4);
+        printf2(TAG_COUNT, "wrote erases: %lu\r\n", erases);
     }
 
     uint32_t lastc = 0;
@@ -250,6 +253,7 @@ uint32_t ctap_atomic_count(uint32_t amount)
     {
         uint32_t val;
         flash_read(flash_addr(COUNTER1_PAGE) + offset * sizeof(val), (uint8_t*)&val, sizeof(val));
+        printf2(TAG_COUNT, "read count %lu from offset %lu\r\n", val, offset);
 
         if (val != 0xffffffff)
         {
@@ -272,10 +276,14 @@ uint32_t ctap_atomic_count(uint32_t amount)
         lastc =  erases * 256 + 1;
         flash_erase_page(COUNTER1_PAGE);
         flash_write(flash_addr(COUNTER1_PAGE), (uint8_t*)&lastc, 4);
+        printf2(TAG_COUNT, "wrote lastc: %lu\r\n", lastc);
 
         erases++;
         flash_erase_page(COUNTER2_PAGE);
         flash_write(flash_addr(COUNTER2_PAGE), (uint8_t*)&erases, 4);
+        printf2(TAG_COUNT, "wrote erases: %lu\r\n", erases);
+
+        printf2(TAG_COUNT, "lastc is 0, new lastc: %lu, new erase: %lu\r\n", lastc, erases);
         return lastc;
     }
 
@@ -291,6 +299,7 @@ uint32_t ctap_atomic_count(uint32_t amount)
         erases = lastc/256;
         flash_erase_page(COUNTER2_PAGE);
         flash_write(flash_addr(COUNTER2_PAGE), (uint8_t*)&erases, 4);
+        printf2(TAG_COUNT, "wrote erases: %lu\r\n", erases);
     }
 
     if (offset == PAGE_SIZE/4)
@@ -302,13 +311,16 @@ uint32_t ctap_atomic_count(uint32_t amount)
         erases = lastc/256 + 1;
         flash_erase_page(COUNTER2_PAGE);
         flash_write(flash_addr(COUNTER2_PAGE), (uint8_t*)&erases, 4);
+        printf2(TAG_COUNT, "wrote erases: %lu\r\n", erases);
 
         flash_erase_page(COUNTER1_PAGE);
+        printf2(TAG_COUNT, "erased lastc\r\n");
         offset = 0;
     }
 
 
     flash_write(flash_addr(COUNTER1_PAGE) + offset * 4, (uint8_t*)&lastc, 4);
+    printf2(TAG_COUNT, "wrote count %lu to offset %lu\r\n", lastc, offset);
 
     if (lastc == sc)
     {
@@ -319,6 +331,7 @@ uint32_t ctap_atomic_count(uint32_t amount)
 
     sc = lastc;
 
+    printf2(TAG_COUNT, "returning count: %lu\r\n", lastc);
     return lastc;
 }
 
