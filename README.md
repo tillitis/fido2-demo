@@ -37,3 +37,12 @@ as the usual CDC device. This functionality is available in the Castor alpha
 release: <https://github.com/tillitis/tillitis-key1/tree/TK1-Castor-alpha-1>.
 The tillitis-key1 repository contains code for the FPGA bitstream and USB
 interface firmware.
+
+## Licenses
+
+This project is licensed under the terms and conditions of the "Apache-2.0" or
+the "MIT" license. See [LICENSE-APACHE](LICENSE-APACHE) and
+[LICENSE-MIT](LICENSE-MIT) for the full license texts.
+
+Imported libraries are isolated in their own directories. They may be released
+under other licenses. See each library for specific license information.
