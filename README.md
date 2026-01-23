@@ -1,5 +1,8 @@
 # FIDO2 Demo
 
+
+This repository is archived, please see our [tkey-fido2](https://github.com/tillitis/tkey-fido2).
+
 FIDO2 Demo is a device app for the [Tillitis TKey](https://www.tillitis.se)
 security key making it work as a FIDO2 security token. The app is a port of
 Solokeys [Solo1 firmware](https://github.com/solokeys/solo1/).
